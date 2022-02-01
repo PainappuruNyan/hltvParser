@@ -25,7 +25,10 @@ def get_data():
 
 
 def get_links():
-    for item in range(0, 101, 100):
+    pr = 0
+    prgrs = 0
+    for item in range(0, 65600, 100):
+        pr += 100
         url = f'https://www.hltv.org/results?offset={item}'
         r = requests.get(url=url, headers=headers)
         soup = BeautifulSoup(r.text, 'lxml')
@@ -33,40 +36,45 @@ def get_links():
         for match in matches:
             links = match.find_all('a', class_='a-reset')
             for link in links:
+                prgrs +=1
                 link = link.get('href')
                 ml = f'https://www.hltv.org{link}'
                 all_links.append(ml)
+            print(f'{prgrs}/{len(links)}')
+        time.sleep(random.randrange(0.6, 1))
 
     count = 0
 
     with open('data/hltvData.csv', mode='a') as csv_file:
-        csv_file.write("map, map number, ...")  # ToDo pls
+        csv_file.write(
+            "map, map_number, match_type, match_date, match_id, event_name, head2head_team1_wins, head2head_team2_wins, head2head_map_team1, head2head_map_team2, team_1_players_id, team_2_players_id, team_1_players_name, team_2_players_name, map_pick_team_1, map_pick_team_2, team1, team1_id, team1_rank, team1_result, team1_wins_1_month, team1_loses_1_month, team1_wins_3_month, team1_loses_3_month, team1_wr_1_month, team1_wr_3_month, team1_map_played_in_1_month, team1_map_played_in_3_month, team1_last_map_win,_team_2, team_2_id, team2_rank, team2_result, team2_wins_1_month, team2_loses_1_month, team2_wins_3_month, team2_loses_3_month, team2_wr_1_month, team2_wr_3_month, team2_map_played_in_1_month, team2_map_played_in_3_month, team2_last_map_win, map_winner_team1, map_winner_team2 \n")
 
-    for link in all_links[:1]:
-        count += 1
-        print(f'progress: {count}/ {len(all_links)}')
-        req = requests.get(url=link, headers=headers)
-        m = BeautifulSoup(req.text, 'lxml')
-        stat_link = f"https://www.hltv.org{m.find('div', class_='results-center-stats').find('a', class_='results-stats').get('href')}"
-        stat_pg = requests.get(url=stat_link, headers=headers)
-        stat = BeautifulSoup(stat_pg.text, 'lxml')
-        date = stat.find('div', class_='wide-grid').find('div', class_='small-text').find('span').text.split(' ')[0]
-        match_date = datetime.strptime(date, "%Y-%m-%d")
-        map_name1 = m.find('div', class_='flexbox-column').find_all('div', class_='mapholder')
-        event_name = m.find('div', class_='event text-ellipsis').find('a').text
-        match_type = \
-            m.find('div', class_='standard-box veto-box').find('div', class_='padding preformatted-text').text.split(
-                '*')[
-                0].split('(')[0].strip().lower()
-        if match_type == 'best of 3':
-            match_type = 'bo3'
-        elif match_type == 'best of 5':
-            match_type = 'bo5'
-        elif match_type == 'best of 1':
-            match_type = 'bo1'
-        print(match_type)
-        for map_num, h in enumerate(map_name1):
-            try:
+    for link in all_links:
+        try:
+            count += 1
+            print(f'progress: {count}/ {len(all_links)}')
+            req = requests.get(url=link, headers=headers)
+            m = BeautifulSoup(req.text, 'lxml')
+            stat_link = f"https://www.hltv.org{m.find('div', class_='results-center-stats').find('a', class_='results-stats').get('href')}"
+            stat_pg = requests.get(url=stat_link, headers=headers)
+            stat = BeautifulSoup(stat_pg.text, 'lxml')
+            date = stat.find('div', class_='wide-grid').find('div', class_='small-text').find('span').text.split(' ')[0]
+            match_date = datetime.strptime(date, "%Y-%m-%d")
+            map_name1 = m.find('div', class_='flexbox-column').find_all('div', class_='mapholder')
+            event_name = m.find('div', class_='event text-ellipsis').find('a').text
+            match_type = \
+                m.find('div', class_='standard-box veto-box').find('div',
+                                                                   class_='padding preformatted-text').text.split(
+                    '*')[
+                    0].split('(')[0].strip().lower()
+            if match_type == 'best of 3':
+                match_type = 'bo3'
+            elif match_type == 'best of 5':
+                match_type = 'bo5'
+            elif match_type == 'best of 1':
+                match_type = 'bo1'
+            print(match_type)
+            for map_num, h in enumerate(map_name1):
                 map_number = map_num + 1
                 team2_last_map_win = 0
                 team1_last_map_win = 0
@@ -121,7 +129,6 @@ def get_links():
                 map_pick_team2 = 0
                 try:
                     picked1 = h.find('div', 'results played').find(class_='pick')
-                    # picked2 = h.find('span', class_='result-right')
                     if picked1.find('div', class_='results-teamname text-ellipsis').text.lower() == team1:
                         map_pick_team1 = 1
                     else:
@@ -253,70 +260,76 @@ def get_links():
                 except Exception as ex:
                     print(f'4 {ex}')
 
+                map_winner_team_1 = 0
+                map_winner_team_2 = 0
+
                 if int(team1_result) < int(team2_result):
-                    map_result = team2
+                    map_winner_team_2 = 1
                 else:
-                    map_result = team1
+                    map_winner_team_1 = 1
 
                 if team1_result == '0' and team2_result == '0':
                     continue
 
                 match_stat = {
-                        'map': map_name,
-                        'map number': map_number,
-                        'match type': match_type,
-                        'match date': match_date.strftime("%Y-%m-%d"),
-                        'match id': match_id,
-                        'event name': event_name,
-                        'head2head results': f'{head2head_team1_wins} : {head2head_team2_wins}',
-                        'head2head_map': f'{head2head_map_team1} : {head2head_map_team2}',
-                        'team 1 players id': team1_players_id[:5],
-                        'team 2 players id': team2_players_id[:5],
-                        'team 1 players name': team1_players_name[:5],
-                        'team 2 players name': team2_players_name[:5],
-                        'map pick team 1': map_pick_team1,
-                        'map pick team 2': map_pick_team2,
+                    'map': map_name,
+                    'map number': map_number,
+                    'match type': match_type,
+                    'match date': match_date.strftime("%Y-%m-%d"),
+                    'match id': match_id,
+                    'event name': event_name,
+                    'head2head_team_1_wins': head2head_team1_wins,
+                    'head2head_team_2_wins': head2head_team2_wins,
+                    'head2head_map team 1': head2head_map_team1,
+                    'head2head_map_team_1': head2head_map_team2,
+                    'team 1 players id': team1_players_id[:5],
+                    'team 2 players id': team2_players_id[:5],
+                    'team 1 players name': team1_players_name[:5],
+                    'team 2 players name': team2_players_name[:5],
+                    'map pick team 1': map_pick_team1,
+                    'map pick team 2': map_pick_team2,
 
-                        'team 1': team1,
-                        'team 1 id': team1_id,
-                        'team 1 rank': team1_rank,
-                        'team 1 result': team1_result,
-                        'team 1 wins 1 month': wins1,
-                        'team 1 loses 1 month': loses1,
-                        'team 1 wins 3 month': wins13,
-                        'team 1 loses 3 month': loses13,
-                        'team 1 wr 1 month': team1_map_wr_1month,
-                        'team 1 wr 3 month': team1_map_wr_3month,
-                        'team 1 map played in 1 month': team1_map_played_in_month,
-                        'team 1 map played in 3 month': team1_map_played_in_3month,
-                        'team 1 last map win': team1_last_map_win,
+                    'team 1': team1,
+                    'team 1 id': team1_id,
+                    'team 1 rank': team1_rank,
+                    'team 1 result': team1_result,
+                    'team 1 wins 1 month': wins1,
+                    'team 1 loses 1 month': loses1,
+                    'team 1 wins 3 month': wins13,
+                    'team 1 loses 3 month': loses13,
+                    'team 1 wr 1 month': team1_map_wr_1month,
+                    'team 1 wr 3 month': team1_map_wr_3month,
+                    'team 1 map played in 1 month': team1_map_played_in_month,
+                    'team 1 map played in 3 month': team1_map_played_in_3month,
+                    'team 1 last map win': team1_last_map_win,
 
-                        'team 2': team2,
-                        'team 2 id': team2_id,
-                        'team 2 rank': team2_rank,
-                        'team 2 result': team2_result,
-                        'team 2 wins 1 month': wins2,
-                        'team 2 loses 1 month': loses2,
-                        'team 2 wins 3 month': wins23,
-                        'team 2 loses 3 month': loses23,
-                        'team 2 wr 1 month': team2_map_wr_1month,
-                        'team 2 wr 3 month': team2_map_wr_3month,
-                        'team 2 map played in 1 month': team2_map_played_in_month,
-                        'team 2 map played in 3 month': team2_map_played_in_3month,
-                        'team 2 last map win': team2_last_map_win,
+                    'team 2': team2,
+                    'team 2 id': team2_id,
+                    'team 2 rank': team2_rank,
+                    'team 2 result': team2_result,
+                    'team 2 wins 1 month': wins2,
+                    'team 2 loses 1 month': loses2,
+                    'team 2 wins 3 month': wins23,
+                    'team 2 loses 3 month': loses23,
+                    'team 2 wr 1 month': team2_map_wr_1month,
+                    'team 2 wr 3 month': team2_map_wr_3month,
+                    'team 2 map played in 1 month': team2_map_played_in_month,
+                    'team 2 map played in 3 month': team2_map_played_in_3month,
+                    'team 2 last map win': team2_last_map_win,
 
-                        'map winner': map_result
-                    }
+                    'map winner team 1': map_winner_team_1,
+                    'map winner team 2': map_winner_team_2
+                }
 
                 with open('data/hltvData.csv', mode='a') as csv_file:
-                    temp_string = ",".join([str(value) for _, value in match_stat.items()])
+                    temp_string = ",".join([" ".join(value) if isinstance(value, list) else str(value) for _, value in match_stat.items()])
                     csv_file.write(f"{temp_string}\n")
 
-                time.sleep(random.randrange(2, 4))
-            except Exception as ex:
-                with open('data/logs.csv', mode='a') as csv_file:
-                    csv_file.write(f"{link}: {ex}")
-        time.sleep(random.randrange(2, 4))
+                time.sleep(random.randrange(1, 2))
+        except Exception as ex:
+            with open('data/logs.csv', mode='a') as csv_file:
+                csv_file.write(f"{link}: {ex}")
+        time.sleep(random.randrange(1, 2))
 
     # with open("projects_data.json", "a", encoding="utf-8") as file:
     #     json.dump(match_stat, file, indent=4, ensure_ascii=False)
