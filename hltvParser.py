@@ -13,7 +13,6 @@ headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 OPR/82.0.4227.50"
 }
 all_links = []
-match_stat = []
 
 
 def get_data():
@@ -37,7 +36,12 @@ def get_links():
                 link = link.get('href')
                 ml = f'https://www.hltv.org{link}'
                 all_links.append(ml)
+
     count = 0
+
+    with open('data/hltvData.csv', mode='a') as csv_file:
+        csv_file.write("map, map number, ...")  # ToDo pls
+
     for link in all_links[:1]:
         count += 1
         print(f'progress: {count}/ {len(all_links)}')
@@ -257,8 +261,7 @@ def get_links():
                 if team1_result == '0' and team2_result == '0':
                     continue
 
-                match_stat.append(
-                    {
+                match_stat = {
                         'map': map_name,
                         'map number': map_number,
                         'match type': match_type,
@@ -304,16 +307,15 @@ def get_links():
 
                         'map winner': map_result
                     }
-                )
+
                 with open('data/hltvData.csv', mode='a') as csv_file:
-                    csv_file.write(match_stat)
+                    temp_string = ",".join([str(value) for _, value in match_stat.items()])
+                    csv_file.write(f"{temp_string}\n")
 
                 time.sleep(random.randrange(2, 4))
             except Exception as ex:
-                error = ex
-                with open('log.csv', 'a', encoding='utf-8') as file:
-                    file.write(link)
-                    file.write(str(error))
+                with open('data/logs.csv', mode='a') as csv_file:
+                    csv_file.write(f"{link}: {ex}")
         time.sleep(random.randrange(2, 4))
 
     # with open("projects_data.json", "a", encoding="utf-8") as file:
