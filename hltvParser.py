@@ -1,12 +1,9 @@
-import requests
-import time
-import json
-import random
 import datetime
-import pandas as pd
-import csv
+import random
+import time
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+
+import requests
 from bs4 import BeautifulSoup
 
 headers = {
@@ -158,7 +155,7 @@ def get_links():
 
                         team1_map_played_in_month = wins1 + loses1
 
-                        if wins1 or loses1 != 0:
+                        if (wins1 + loses1) != 0:
                             team1_map_wr_1month = wins1 / (wins1 + loses1)
                         else:
                             team1_map_wr_1month = -1
@@ -182,16 +179,16 @@ def get_links():
 
                         team2_map_played_in_month = wins2 + loses2
 
-                        if wins2 or loses2 != 0:
-                            team2_map_wr_1month = wins1 / (wins1 + loses1)
+                        if (wins2 + loses2) != 0:
+                            team2_map_wr_1month = wins2 / (wins2 + loses2)
                         else:
                             team2_map_wr_1month = -1
                 except Exception as ex:
 
                     print(f'2 {ex}')
 
-                team1_3month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date - timedelta(days=90)).strftime("%Y-%m-%d")}&endDate={match_date.strftime("%Y-%m-%d")}&maps={map_name}'
-                team2_3month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team2_id}/{team2}?startDate={(match_date - timedelta(days=90)).strftime("%Y-%m-%d")}&endDate={match_date.strftime("%Y-%m-%d")}&maps={map_name}'
+                team1_3month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date_minus_1_day - timedelta(days=90)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
+                team2_3month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team2_id}/{team2}?startDate={(match_date_minus_1_day - timedelta(days=90)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
 
                 team1_3month_stat_pg = requests.get(url=team1_3month_stat_url, headers=headers)
                 team1_3month_stat = BeautifulSoup(team1_3month_stat_pg.text, 'lxml')
@@ -219,7 +216,7 @@ def get_links():
                             team1_last_map_win = 1
                             head2head_map_team1 += 1
 
-                        if wins13 or loses13 != 0:
+                        if (wins13 + loses13) != 0:
                             team1_map_wr_3month = wins13 / (wins13 + loses13)
                         else:
                             team1_map_wr_3month = -1
@@ -253,7 +250,7 @@ def get_links():
                             team2_last_map_win = 1
                             head2head_map_team2 += 1
 
-                        if wins23 or loses23 != 0:
+                        if (wins23 + loses23) != 0:
                             team2_map_wr_1month = wins23 / (wins23 + loses23)
                         else:
                             team2_map_wr_3month = -1
