@@ -47,7 +47,7 @@ def get_links():
 
     with open('data/hltvData.csv', mode='a') as csv_file:
         csv_file.write(
-            "map, map_number, match_type, match_date, match_id, event_name, head2head_team1_wins, head2head_team2_wins, head2head_map_team1, head2head_map_team2, team_1_players_id, team_2_players_id, team_1_players_name, team_2_players_name, map_pick_team_1, map_pick_team_2, team1, team1_id, team1_rank, team1_result, team1_wins_1_month, team1_loses_1_month, team1_wins_3_month, team1_loses_3_month, team1_wr_1_month, team1_wr_3_month, team1_map_played_in_1_month, team1_map_played_in_3_month, team1_last_map_win,_team_2, team_2_id, team2_rank, team2_result, team2_wins_1_month, team2_loses_1_month, team2_wins_3_month, team2_loses_3_month, team2_wr_1_month, team2_wr_3_month, team2_map_played_in_1_month, team2_map_played_in_3_month, team2_last_map_win, map_winner_team1, map_winner_team2 \n")
+            "map,map_number,match_type,match_date,match_id,event_name,head2head_team1_wins,head2head_team2_wins,head2head_map_team1,head2head_map_team2,team_1_players_id,team2_players_id,team_1_players_name,team_2_players_name,map_pick_team_1,map_pick_team_2,team1, team1_id,team1_rank,team1_result,team1_wins_1_month,team1_loses_1_month,team1_wins_3_month,team1_loses_3_month,team1_wr_1_month,team1_wr_3_month,team1_map_played_in_1_month,team1_map_played_in_3_month,team1_last_map_win,team_2,team_2_id,team2_rank,team2_result,team2_wins_1_month,team2_loses_1_month,team2_wins_3_month,team2_loses_3_month,team2_wr_1_month,team2_wr_3_month,team2_map_played_in_1_month,team2_map_played_in_3_month,team2_last_map_win,map_winner_team1,map_winner_team2\n")
 
     for link in all_links:
         try:
@@ -138,9 +138,9 @@ def get_links():
                     map_pick_team2 = 0
                 print(map_pick_team1)
                 print(map_pick_team2)
-
-                team1_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date.strftime("%Y-%m-%d")}&maps={map_name}'
-                team2_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team2_id}/{team2}?startDate={(match_date - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date.strftime("%Y-%m-%d")}&maps={map_name}'
+                match_date_minus_1_day = match_date - timedelta(days=1)
+                team1_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date_minus_1_day - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
+                team2_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team2_id}/{team2}?startDate={(match_date_minus_1_day - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
                 team1_1month_stat_pg = requests.get(url=team1_1month_stat_url, headers=headers)
                 team1_1month_stat = BeautifulSoup(team1_1month_stat_pg.text, 'lxml')
                 try:
