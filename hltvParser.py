@@ -37,8 +37,8 @@ def get_links():
                 link = link.get('href')
                 ml = f'https://www.hltv.org{link}'
                 all_links.append(ml)
-            print(f'{prgrs}/{len(links)}')
-        time.sleep(random.randrange(0.6, 1))
+        time.sleep(random.randrange(1, 2))
+        print(pr)
 
     count = 0
 
