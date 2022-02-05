@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 OPR/82.0.4227.50"
 }
+all_links = []
 
 
 def get_predict():
@@ -36,7 +37,6 @@ def get_predict():
         team2_last_map_win = 0
         team1_last_map_win = 0
         map_name = f"de_{h.find('div', class_='mapname').text.lower()}"
-
         head2head_team1_wins = (
             m.find("div", class_="flexbox-column flexbox-center grow right-border").find("div", class_="bold").text
         )
@@ -82,10 +82,9 @@ def get_predict():
         except Exception as ex:
             map_pick_team1 = 0
             map_pick_team2 = 0
-        match_date_minus_1_day = match_date
+        match_date_minus_1_day = match_date - timedelta(days=1)
         team1_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date_minus_1_day - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
         team2_1month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team2_id}/{team2}?startDate={(match_date_minus_1_day - timedelta(days=30)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
-
         team1_1month_stat_pg = requests.get(url=team1_1month_stat_url, headers=headers)
         team1_1month_stat = BeautifulSoup(team1_1month_stat_pg.text, "lxml")
         try:
@@ -132,6 +131,7 @@ def get_predict():
                 else:
                     team2_map_wr_1month = -1
         except Exception as ex:
+
             print(f"2 {ex}")
 
         team1_3month_stat_url = f'https://www.hltv.org/stats/teams/matches/{team1_id}/{team1}?startDate={(match_date_minus_1_day - timedelta(days=90)).strftime("%Y-%m-%d")}&endDate={match_date_minus_1_day.strftime("%Y-%m-%d")}&maps={map_name}'
@@ -198,9 +198,10 @@ def get_predict():
                     team2_map_wr_3month = -1
         except Exception as ex:
             print(f"4 {ex}")
-        model = catboost.CatBoostClassifier()
-        model.load_model("first_model")
-        data = pd.DataFrame(
+
+        ###
+
+        df = pd.DataFrame(
             data={
                 "match_date": match_date.isoformat(),
                 "match_id": match_id,
@@ -239,15 +240,99 @@ def get_predict():
                 "team1_last_map_win": team1_last_map_win,
                 "team2_last_map_win": team2_last_map_win,
             },
-            index=[0]
-
+            index=[0],
         )
-        pd.set_option('display.max_rows', None)
-        pd.set_option('display.max_columns', None)
-        pd.set_option('display.width', None)
-        # pd.set_option('display.max_colwidth', -1)
-        # print(data)
-        print(map_name)
-        print(f"Will winn {team1 if model.predict(data)[0] == 0 else team2}")
+        df.columns = [item.replace(" ", "") for item in list(df.columns)]
+        df = df.rename({"team_2": "team2", "team_2_id": "team2_id"}, axis=1)
+        df = df.rename({"_team_2": "team2", "team_2_id": "team2_id"}, axis=1)
+        df = df.drop_duplicates()
+        df = df.dropna()
+        df["map_number"] = df["map_number"].astype("int")
+        df["head2head_map_team1"] = df["head2head_map_team1"].astype("int")
+        df["head2head_map_team2"] = df["head2head_map_team2"].astype("int")
+        df["map_pick_team_1"] = df["map_pick_team_1"].astype("int")
+        df["map_pick_team_2"] = df["map_pick_team_2"].astype("int")
+        df["head2head_team1_wins"] = df["head2head_team1_wins"].astype("int")
+        df["head2head_team2_wins"] = df["head2head_team2_wins"].astype("int")
+        df["team1_map_played_in_3_month"] = df["team1_map_played_in_3_month"].astype("int")
+        df["team2_map_played_in_3_month"] = df["team2_map_played_in_3_month"].astype("int")
+        df["rank_difference"] = df["team1_rank"].astype("int") - df["team2_rank"].astype("int")
+        df["head2head_teams_wins_diff"] = df["head2head_team1_wins"] - df["head2head_team2_wins"]
+        df["head2head_map_teams_diff"] = df["head2head_map_team1"] - df["head2head_map_team2"]
+        df["team_last_map_win_diff"] = df["team1_last_map_win"] - df["team2_last_map_win"]
+        df["team_wins_diff"] = df["team1_wins_1_month"] - df["team2_wins_1_month"]
+        df["team_loses_diff"] = df["team1_loses_1_month"] - df["team2_loses_1_month"]
+        df["team_wins_diff"] = df["team1_wins_1_month"] - df["team2_wins_1_month"]
+        df["team_loses_diff"] = df["team1_loses_1_month"] - df["team2_loses_1_month"]
+        df["team_wins_3month_diff"] = df["team1_wins_3_month"] - df["team2_wins_3_month"]
+        df["team_loses_3month_diff"] = df["team1_loses_3_month"] - df["team2_loses_3_month"]
+        df["maps_played_diff"] = df["team1_map_played_in_1_month"] - df["team2_map_played_in_1_month"]
+        df["maps_played_3month_diff"] = df["team1_map_played_in_3_month"] - df["team2_map_played_in_3_month"]
+        df["wr_diff"] = df["team1_wr_1_month"] - df["team2_wr_1_month"]
+        df["wr_3month_diff"] = df["team1_wr_3_month"] - df["team2_wr_3_month"]
+        df = df[
+            [
+                "match_date",
+                "wr_3month_diff",
+                "wr_diff",
+                "maps_played_3month_diff",
+                "maps_played_diff",
+                "team_loses_3month_diff",
+                "team_wins_3month_diff",
+                "team_loses_diff",
+                "head2head_teams_wins_diff",
+                "team_last_map_win_diff",
+                "team_wins_diff",
+                "head2head_map_teams_diff",
+                "match_id",
+                "map_number",
+                "map",
+                "map_pick_team_1",
+                "map_pick_team_2",
+                "rank_difference",
+                "head2head_team1_wins",
+                "head2head_team2_wins",
+                "head2head_map_team1",
+                "head2head_map_team2",
+                "team1_wins_1_month",
+                "team2_wins_1_month",
+                "team1_loses_1_month",
+                "team2_loses_1_month",
+                "team1_wins_3_month",
+                "team2_wins_3_month",
+                "team1_loses_3_month",
+                "team2_loses_3_month",
+                "team1_wr_1_month",
+                "team2_wr_1_month",
+                "team1_wr_3_month",
+                "team2_wr_3_month",
+                "team1_map_played_in_1_month",
+                "team2_map_played_in_1_month",
+                "team1_map_played_in_3_month",
+                "team2_map_played_in_3_month",
+                "team1_last_map_win",
+                "team2_last_map_win",
+            ]
+        ]
+        df = df.drop(
+            [
+                "match_id",
+                "map_number",
+                "match_date",
+            ],
+            axis=1,
+        )
 
-get_predict()
+        model = catboost.CatBoostClassifier()
+        model.load_model("total_66_grid_search")
+
+        print(map_name)
+        print(f"Will total 26.5: {'yes' if model.predict(df)[0] == 1 else 'no'}")
+
+
+def main():
+    get_predict()
+
+
+if __name__ == "__main__":
+    main()
