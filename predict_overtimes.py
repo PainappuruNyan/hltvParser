@@ -286,6 +286,7 @@ def get_predict():
                 "head2head_map_teams_diff",
                 "match_id",
                 "map_number",
+                "map",
                 "map_pick_team_1",
                 "map_pick_team_2",
                 "rank_difference",
@@ -323,7 +324,7 @@ def get_predict():
         )
 
         model = catboost.CatBoostClassifier()
-        model.load_model("predict_overtimes")
+        model.load_model("predict_overtimes_v2")
 
         print(map_name)
         print(f"Will overtimes: {'yes' if model.predict(df)[0] == 1 else 'no'}")
