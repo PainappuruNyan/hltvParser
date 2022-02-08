@@ -270,52 +270,20 @@ def get_predict():
         df["maps_played_3month_diff"] = df["team1_map_played_in_3_month"] - df["team2_map_played_in_3_month"]
         df["wr_diff"] = df["team1_wr_1_month"] - df["team2_wr_1_month"]
         df["wr_3month_diff"] = df["team1_wr_3_month"] - df["team2_wr_3_month"]
-        df = df[
-            [
-                "match_date",
-                "wr_3month_diff",
-                "wr_diff",
-                "maps_played_3month_diff",
-                "maps_played_diff",
-                "team_loses_3month_diff",
-                "team_wins_3month_diff",
-                "team_loses_diff",
-                "head2head_teams_wins_diff",
-                "team_last_map_win_diff",
-                "team_wins_diff",
-                "head2head_map_teams_diff",
-                "match_id",
-                "map_number",
-                #"map",
-                "map_pick_team_1",
-                "map_pick_team_2",
-                "rank_difference",
-                "head2head_team1_wins",
-                "head2head_team2_wins",
-                "head2head_map_team1",
-                "head2head_map_team2",
-                "team1_wins_1_month",
-                "team2_wins_1_month",
-                "team1_loses_1_month",
-                "team2_loses_1_month",
-                "team1_wins_3_month",
-                "team2_wins_3_month",
-                "team1_loses_3_month",
-                "team2_loses_3_month",
-                "team1_wr_1_month",
-                "team2_wr_1_month",
-                "team1_wr_3_month",
-                "team2_wr_3_month",
-                "team1_map_played_in_1_month",
-                "team2_map_played_in_1_month",
-                "team1_map_played_in_3_month",
-                "team2_map_played_in_3_month",
-                "team1_last_map_win",
-                "team2_last_map_win",
-            ]
-        ]
+        df = df[["team1_rank", "team2_rank", "match_date", "wr_3month_diff", "wr_diff", "maps_played_3month_diff",
+                 "maps_played_diff", "team_loses_3month_diff", "team_wins_3month_diff", "team_loses_diff",
+                 "head2head_teams_wins_diff", "team_last_map_win_diff", "team_wins_diff", "head2head_map_teams_diff",
+                  "match_id", "map_number", "map", "map_pick_team_1",
+                 "map_pick_team_2", "rank_difference", "head2head_team1_wins", "head2head_team2_wins",
+                 "head2head_map_team1", "head2head_map_team2", "team1_wins_1_month", "team2_wins_1_month",
+                 "team1_loses_1_month", "team2_loses_1_month", "team1_wins_3_month", "team2_wins_3_month",
+                 "team1_loses_3_month", "team2_loses_3_month", "team1_wr_1_month", "team2_wr_1_month",
+                 "team1_wr_3_month", "team2_wr_3_month", "team1_map_played_in_1_month", "team2_map_played_in_1_month",
+                 "team1_map_played_in_3_month", "team2_map_played_in_3_month", "team1_last_map_win",
+                 "team2_last_map_win",]]
         df = df.drop(
             [
+                "map",
                 "match_id",
                 "map_number",
                 "match_date",
@@ -324,10 +292,10 @@ def get_predict():
         )
 
         model = catboost.CatBoostClassifier()
-        model.load_model("predict_overtimes_v2")
+        model.load_model("total_Recall_Precision")
 
         print(map_name)
-        print(f"Will overtimes: {'yes' if model.predict(df)[0] == 1 else 'no'}")
+        print(f"Will total 26.5: {'yes' if model.predict(df)[0] == 1 else 'no'}")
 
 
 def main():
