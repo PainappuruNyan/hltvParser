@@ -173,31 +173,31 @@ def get_links():
 
                     team1_rounds_lose_mean_1month = np.mean(team1_1month_map_results)
                     team1_rounds_lose_median_1month = np.median(team1_1month_map_results)
-                    team1_rounds_lose_mode_1month = stats.mode(team1_1month_map_results)
+                    team1_rounds_lose_mode_1month = stats.mode(team1_1month_map_results)[0][0]
                     team1_rounds_lose_max_1month = np.max(team1_1month_map_results)
                     team1_rounds_lose_min_1month = np.min(team1_1month_map_results)
 
                     team1_diff_mean_1month = np.mean(team1_diff_with_enemy_1month)
                     team1_diff_median_1month = np.median(team1_diff_with_enemy_1month)
-                    team1_diff_mode_1month = stats.mode(team1_diff_with_enemy_1month)
+                    team1_diff_mode_1month = stats.mode(team1_diff_with_enemy_1month)[0][0]
                     team1_diff_max_1month = np.max(team1_diff_with_enemy_1month)
                     team1_diff_min_1month = np.min(team1_diff_with_enemy_1month)
 
                     team1_rounds_vs_enemy_mean_1month = np.mean(team1_rounds_vs_enemy_1month)
                     team1_rounds_vs_enemy_median_1month = np.median(team1_rounds_vs_enemy_1month)
-                    team1_rounds_vs_enemy_mode_1month = stats.mode(team1_rounds_vs_enemy_1month)
+                    team1_rounds_vs_enemy_mode_1month = stats.mode(team1_rounds_vs_enemy_1month)[0][0]
                     team1_rounds_vs_enemy_max_1month = np.max(team1_rounds_vs_enemy_1month)
                     team1_rounds_vs_enemy_min_1month = np.min(team1_rounds_vs_enemy_1month)
 
                     team1_rounds_win_mean_1month = np.mean(team1_1month_map_results)
                     team1_rounds_win_median_1month = np.median(team1_1month_map_results)
-                    team1_rounds_win_mode_1month = stats.mode(team1_1month_map_results)
+                    team1_rounds_win_mode_1month = stats.mode(team1_1month_map_results)[0][0]
                     team1_max_rounds_1month = np.max(team1_1month_map_results)
                     team1_min_rounds_1month = np.min(team1_1month_map_results)
 
                     team1_1month_totals_mean = np.mean(team1_1month_map_totals)
                     team1_1month_totals_median = np.median(team1_1month_map_totals)
-                    team1_1month_totals_mode = stats.mode(team1_1month_map_totals)
+                    team1_1month_totals_mode = stats.mode(team1_1month_map_totals)[0][0]
                     team1_1month_totals_max = np.max(team1_1month_map_totals)
                     team1_1month_totals_min = np.min(team1_1month_map_totals)
                 except Exception as ex:
@@ -239,31 +239,31 @@ def get_links():
 
                     team2_rounds_lose_mean_1month = np.mean(team2_1month_map_loses)
                     team2_rounds_lose_median_1month = np.median(team2_1month_map_loses)
-                    team2_rounds_lose_mode_1month = stats.mode(team2_1month_map_loses)
+                    team2_rounds_lose_mode_1month = stats.mode(team2_1month_map_loses)[0][0]
                     team2_rounds_lose_max_1month = np.max(team2_1month_map_loses)
                     team2_rounds_lose_min_1month = np.min(team2_1month_map_loses)
 
                     team2_diff_mean_1month = np.mean(team2_diff_with_enemy_1month)
                     team2_diff_median_1month = np.median(team2_diff_with_enemy_1month)
-                    team2_diff_mode_1month = stats.mode(team2_diff_with_enemy_1month)
+                    team2_diff_mode_1month = stats.mode(team2_diff_with_enemy_1month)[0][0]
                     team2_diff_max_1month = np.max(team2_diff_with_enemy_1month)
                     team2_diff_min_1month = np.min(team2_diff_with_enemy_1month)
 
                     team2_rounds_vs_enemy_mean_1month = np.mean(team2_rounds_vs_enemy_1month)
                     team2_rounds_vs_enemy_median_1month = np.median(team2_rounds_vs_enemy_1month)
-                    team2_rounds_vs_enemy_mode_1month = stats.mode(team2_rounds_vs_enemy_1month)
+                    team2_rounds_vs_enemy_mode_1month = stats.mode(team2_rounds_vs_enemy_1month)[0][0]
                     team2_rounds_vs_enemy_max_1month = np.max(team2_rounds_vs_enemy_1month)
                     team2_rounds_vs_enemy_min_1month = np.min(team2_rounds_vs_enemy_1month)
 
                     team2_rounds_win_mean_1month = np.mean(team2_1month_map_results)
                     team2_rounds_win_median_1month = np.median(team2_1month_map_results)
-                    team2_rounds_win_mode_1month = stats.mode(team2_1month_map_results)
+                    team2_rounds_win_mode_1month = stats.mode(team2_1month_map_results)[0][0]
                     team2_max_rounds_1month = np.max(team2_1month_map_results)
                     team2_min_rounds_1month = np.min(team2_1month_map_results)
 
                     team2_1month_totals_mean = np.mean(team2_1month_map_totals)
                     team2_1month_totals_median = np.median(team2_1month_map_totals)
-                    team2_1month_totals_mode = stats.mode(team2_1month_map_totals)
+                    team2_1month_totals_mode = stats.mode(team2_1month_map_totals)[0][0]
                     team2_1month_totals_max = np.max(team2_1month_map_totals)
                     team2_1month_totals_min = np.min(team2_1month_map_totals)
                 except Exception as ex:
@@ -316,31 +316,31 @@ def get_links():
 
                     team1_rounds_lose_mean_3month = np.mean(team1_3month_map_results)
                     team1_rounds_lose_median_3month = np.median(team1_3month_map_results)
-                    team1_rounds_lose_mode_3month = stats.mode(team1_3month_map_results)
+                    team1_rounds_lose_mode_3month = stats.mode(team1_3month_map_results)[0][0]
                     team1_rounds_lose_max_3month = np.max(team1_3month_map_results)
                     team1_rounds_lose_min_3month = np.min(team1_3month_map_results)
 
                     team1_diff_mean_3month = np.mean(team1_diff_with_enemy_3month)
                     team1_diff_median_3month = np.median(team1_diff_with_enemy_3month)
-                    team1_diff_mode_3month = stats.mode(team1_diff_with_enemy_3month)
+                    team1_diff_mode_3month = stats.mode(team1_diff_with_enemy_3month)[0][0]
                     team1_diff_max_3month = np.max(team1_diff_with_enemy_3month)
                     team1_diff_min_3month = np.min(team1_diff_with_enemy_3month)
 
                     team1_rounds_vs_enemy_mean_3month = np.mean(team1_rounds_vs_enemy_3month)
                     team1_rounds_vs_enemy_median_3month = np.median(team1_rounds_vs_enemy_3month)
-                    team1_rounds_vs_enemy_mode_3month = stats.mode(team1_rounds_vs_enemy_3month)
+                    team1_rounds_vs_enemy_mode_3month = stats.mode(team1_rounds_vs_enemy_3month)[0][0]
                     team1_rounds_vs_enemy_max_3month = np.max(team1_rounds_vs_enemy_3month)
                     team1_rounds_vs_enemy_min_3month = np.min(team1_rounds_vs_enemy_3month)
 
                     team1_rounds_win_mean_3month = np.mean(team1_3month_map_results)
                     team1_rounds_win_median_3month = np.median(team1_3month_map_results)
-                    team1_rounds_win_mode_3month = stats.mode(team1_3month_map_results)
+                    team1_rounds_win_mode_3month = stats.mode(team1_3month_map_results)[0][0]
                     team1_max_rounds_3month = np.max(team1_3month_map_results)
                     team1_min_rounds_3month = np.min(team1_3month_map_results)
 
                     team1_3month_totals_mean = np.mean(team1_3month_map_totals)
                     team1_3month_totals_median = np.median(team1_3month_map_totals)
-                    team1_3month_totals_mode = stats.mode(team1_3month_map_totals)
+                    team1_3month_totals_mode = stats.mode(team1_3month_map_totals)[0][0]
                     team1_3month_totals_max = np.max(team1_3month_map_totals)
                     team1_3month_totals_min = np.min(team1_3month_map_totals)
 
@@ -390,31 +390,31 @@ def get_links():
 
                     team2_rounds_lose_mean_3month = np.mean(team2_3month_map_loses)
                     team2_rounds_lose_median_3month = np.median(team2_3month_map_loses)
-                    team2_rounds_lose_mode_3month = stats.mode(team2_3month_map_loses)
+                    team2_rounds_lose_mode_3month = stats.mode(team2_3month_map_loses)[0][0]
                     team2_rounds_lose_max_3month = np.max(team2_3month_map_loses)
                     team2_rounds_lose_min_3month = np.min(team2_3month_map_loses)
 
                     team2_diff_mean_3month = np.mean(team2_diff_with_enemy_3month)
                     team2_diff_median_3month = np.median(team2_diff_with_enemy_3month)
-                    team2_diff_mode_3month = stats.mode(team2_diff_with_enemy_3month)
+                    team2_diff_mode_3month = stats.mode(team2_diff_with_enemy_3month)[0][0]
                     team2_diff_max_3month = np.max(team2_diff_with_enemy_3month)
                     team2_diff_min_3month = np.min(team2_diff_with_enemy_3month)
 
                     team2_rounds_vs_enemy_mean_3month = np.mean(team2_rounds_vs_enemy_3month)
                     team2_rounds_vs_enemy_median_3month = np.median(team2_rounds_vs_enemy_3month)
-                    team2_rounds_vs_enemy_mode_3month = stats.mode(team2_rounds_vs_enemy_3month)
+                    team2_rounds_vs_enemy_mode_3month = stats.mode(team2_rounds_vs_enemy_3month)[0][0]
                     team2_rounds_vs_enemy_max_3month = np.max(team2_rounds_vs_enemy_3month)
                     team2_rounds_vs_enemy_min_3month = np.min(team2_rounds_vs_enemy_3month)
 
                     team2_rounds_win_mean_3month = np.mean(team2_3month_map_results)
                     team2_rounds_win_median_3month = np.median(team2_3month_map_results)
-                    team2_rounds_win_mode_3month = stats.mode(team2_3month_map_results)
+                    team2_rounds_win_mode_3month = stats.mode(team2_3month_map_results)[0][0]
                     team2_max_rounds_3month = np.max(team2_3month_map_results)
                     team2_min_rounds_3month = np.min(team2_3month_map_results)
 
                     team2_3month_totals_mean = np.mean(team2_3month_map_totals)
                     team2_3month_totals_median = np.median(team2_3month_map_totals)
-                    team2_3month_totals_mode = stats.mode(team2_3month_map_totals)
+                    team2_3month_totals_mode = stats.mode(team2_3month_map_totals)[0][0]
                     team2_3month_totals_max = np.max(team2_3month_map_totals)
                     team2_3month_totals_min = np.min(team2_3month_map_totals)
 
